@@ -17,7 +17,6 @@ public class ItemService {
         newItem.setName(items.getName());
         newItem.setProductId(items.getProductId());
         newItem.setPrice(items.getPrice());
-        newItem.setDiscountprice(price);
         return itemRepository.saveAndFlush(newItem);
     }
 }

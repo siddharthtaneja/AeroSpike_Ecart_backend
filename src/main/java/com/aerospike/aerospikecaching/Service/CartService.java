@@ -10,6 +10,7 @@ import com.aerospike.aerospikecaching.Repository.OrderRepository;
 import com.aerospike.aerospikecaching.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.transaction.Transactional;
 import java.security.Principal;
@@ -77,9 +78,14 @@ public class CartService {
             if (cartObj.getItems() == items) {
                 int x=cartObj.getQuantity() + value;
                 if(x>=1) {
-                    cartObj.setQuantity(x);
-                    cartRepository.save(cartObj);
-                    return "\"successfull\"";
+                    if(x > items.getQuantity()){
+                        return "\"unsuccessfull\"";
+                    }
+                    else {
+                        cartObj.setQuantity(x);
+                        cartRepository.save(cartObj);
+                        return "\"successfull\"";
+                    }
                 }
             }
         }
@@ -113,12 +119,14 @@ public class CartService {
     public List<Orders> checkOut(Principal principal) {
         Users users = userRepositoryClass.findByEmail(principal.getName());
         List<Cart> cartList = cartRepository.findAllByUsers(Optional.ofNullable(users));
-
         for(Cart cart : cartList) {
             Orders orders = new Orders();
             orders.setUserId(cart.getUsers().getId());
             orders.setQuantity(cart.getQuantity());
             orders.setPrice(cart.getItems().getPrice());
+            Items items = itemRepositoryClass.findByProductId(cart.getItems().getProductId());
+            items.setQuantity(items.getQuantity() - cart.getQuantity());
+            System.out.println(items.toString());
             orders.setItemName(cart.getItems().getName());
             orders.setDate(new Date());
             cartRepository.delete(cart);

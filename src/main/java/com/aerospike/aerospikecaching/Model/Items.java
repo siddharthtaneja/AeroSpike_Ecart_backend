@@ -16,7 +16,7 @@ public class Items {
     private double price;
     private String image;
     private String category;
-    private Long Discountprice;
+    private int quantity;
 
 
 }

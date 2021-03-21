@@ -72,4 +72,16 @@ public class ItemController {
         Simple.deleteById(id);
         return Simple.findAll();
     }
+    @GetMapping("/up/{id}/{quan}")
+    @Caching(evict = {@CacheEvict(value = "test",key = "#id"),@CacheEvict(value = "test",key = "56")})
+    public Items updateItem(@PathVariable(value = "id")Long id,@PathVariable(value = "quan")String quan){
+        Items items = itemRepositoryClass.findByProductId(id);
+        System.out.println(quan);
+        int a = Integer.parseInt(quan);
+        items.setQuantity(a);
+        items.setProductId(items.getProductId());
+        System.out.println(items.toString());
+        itemRepositoryClass.saveAndFlush(items);
+        return items;
+    }
 }

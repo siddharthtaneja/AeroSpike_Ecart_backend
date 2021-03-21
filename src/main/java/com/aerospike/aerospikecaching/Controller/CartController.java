@@ -7,6 +7,7 @@ import com.aerospike.aerospikecaching.Repository.OrderRepository;
 import com.aerospike.aerospikecaching.Repository.UserRepository;
 import com.aerospike.aerospikecaching.Service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,7 @@ public class CartController {
     public List<Cart> getCart(Principal principal){
         return cartService.getEmail(principal);
     }
+    @CacheEvict(value = "test",key = "#productId")
     @GetMapping("/cart/addItem/productId/{id}")
     public String addItemToCart(@PathVariable("id") Long productId, Principal principal){
         return cartService.additemstoCart(principal,productId);
@@ -45,7 +47,7 @@ public class CartController {
         return cartService.decrement(value,productId,principal);
     }
     @GetMapping("checkout")
-    @ResponseBody
+    @CacheEvict(value = "test",key = "56")
     public List<Orders> checkout(Principal principal) {
         return cartService.checkOut(principal);
     }

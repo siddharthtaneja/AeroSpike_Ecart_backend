@@ -24,7 +24,7 @@ public class SignController {
     SignupService signupservice;
     @GetMapping("/get")
     @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
-    @Cacheable(value = "test",key = "76")
+    @Cacheable(value = "test",key = "176")
     public Users getData(Principal principal) {
         System.out.println("I am here bro");
         return signupservice.getPro(principal);

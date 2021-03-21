@@ -37,7 +37,7 @@ public class UserController {
         return "Success";
     }
     @GetMapping("/logout")
-    @CacheEvict(value = "test",key = "76")
+    @CacheEvict(value = "test",key = "176")
     public String logout(HttpServletRequest req, HttpServletResponse ros) {
         Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
         System.out.println("LogOut Servlet :"+authentication);
@@ -55,12 +55,15 @@ public class UserController {
         return "\"Success\"";
     }
     @PutMapping("update")
-    @CachePut(value = "test",key = "76")
+    @CachePut(value = "test",key = "176")
     public Users update(@RequestBody Users users){
         users.setActive(1);
         users.setAuthentication("basic");
         userRepository.save(users);
         return users;
     }
-
+    @GetMapping("getPass/{email}")
+    public Users getPass(@PathVariable(value = "email")String email) {
+        return userRepository.findByEmail(email);
+    }
 }
